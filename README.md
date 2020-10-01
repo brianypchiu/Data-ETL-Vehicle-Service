@@ -1,8 +1,3 @@
-Project Title: Data-ETL-Vehicle-Service
-Performing real data ETL by using Microsoft SQL Server Management Studio.
-This project is to handle errors during ETL and sort out data for furture analysis
-
-
 ETL-Vehicle Order Data 2014 to 2016
 ===================================
 
