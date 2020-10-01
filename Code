@@ -1,0 +1,104 @@
+USE [DSTRAINING]
+GO
+/****** Object:  StoredProcedure [dbo].[BLD_WRK_VehicleService]    Script Date: 9/30/2020 9:05:07 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROC [dbo].[BLD_WRK_VehicleService]
+-- =============================================
+-- Author:		BRIAN CHIU
+-- Create date: 20200803
+-- Description:	RAW -> WRK
+-- MOD Date:
+-- =============================================
+
+AS
+BEGIN
+
+-- =============================================
+--DROP TABLE 
+-- =============================================
+IF OBJECT_ID('WRK_VehicleService') IS NOT NULL
+DROP TABLE [WRK_VehicleService]
+
+
+-- =============================================
+--CREATE TABLE 
+-- =============================================
+Create Table [WRK_VehicleService]
+(
+	[RowNumber]			INT IDENTITY(1,1)
+	,[CustomerID]		VARCHAR(100)
+	,[CustomerSince]	DATE
+	,[Vehicle]			VARCHAR(100)
+	,[2014]				FLOAT
+	,[2015]				FLOAT
+	,[2016E]			FLOAT
+)
+
+-- =============================================
+--TRUNCATE TABLE
+-- =============================================
+TRUNCATE TABLE [WRK_VehicleService]
+
+-- =============================================
+--INERT INTO 
+-- =============================================
+INSERT INTO [WRK_VehicleService]
+(
+	[CustomerID]
+	,[CustomerSince]
+	,[Vehicle]
+	,[2014]
+	,[2015]
+	,[2016E]
+)
+SELECT 
+	[CustomerID]
+	,[CustomerSince]
+	,[Vehicle]
+	,[2014]
+	,[2015]
+	,[2016E]
+
+FROM [RAW_VehicleService_20200802]
+--EXCLUSIONS
+WHERE ISNUMERIC([2015]) = 1
+OR [2015] = ''
+--(1049998 rows affected)
+
+/*
+EXCLUDED ROW (NUMERIC ROW WITH VARCHAR VALUE)
+  SELECT *
+  FROM [DSTRAINING].[dbo].[RAW_VehicleService_20200802]
+  WHERE ISNUMERIC([2015]) = 0
+  AND [2015] <> ''
+--(1 row affected)
+
+ADDITIONAL CHECKS (DUPLICATE ROWS)
+  SELECT [CustomerID], COUNT(*)
+  FROM [WRK_VehicleService]
+  GROUP BY [CustomerID]
+  HAVING COUNT(*) > 1
+--(2 rows affected)
+
+ADDITIONAL CHECKS (UNREASONABLE TIMEFRAME)
+  SELECT *
+  FROM [WRK_VehicleService]
+  WHERE [CustomerSince] < '1965-01-01'
+--(1 row affected)
+
+
+*/
+
+END
+
+/*
+	Select *
+	From [dbo].[RAW_VehicleService_20200802]
+
+	Select *
+	From [dbo].[VehicleService_20200802]
+
+*/
